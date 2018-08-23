@@ -4,6 +4,9 @@ import callApi from '../../util/apiCaller';
 export const ADD_POST = 'ADD_POST';
 export const ADD_POSTS = 'ADD_POSTS';
 export const DELETE_POST = 'DELETE_POST';
+export const EDIT_POST = 'EDIT_POST';
+export const LIKE_POST = 'LIKE_POST';
+export const DISLIKE_POST = 'DISLIKE_POST';
 
 // Export Actions
 export function addPost(post) {
@@ -20,6 +23,7 @@ export function addPostRequest(post) {
         name: post.name,
         title: post.title,
         content: post.content,
+        voteCount: post.voteCount,
       },
     }).then(res => dispatch(addPost(res.post)));
   };
@@ -56,5 +60,65 @@ export function deletePost(cuid) {
 export function deletePostRequest(cuid) {
   return (dispatch) => {
     return callApi(`posts/${cuid}`, 'delete').then(() => dispatch(deletePost(cuid)));
+  };
+}
+
+export function editPost(cuid, post) {
+  return {
+    type: EDIT_POST,
+    cuid,
+    post,
+  };
+}
+
+export function editPostRequest(cuid, post) {
+  console.log('IN EDIT');
+  console.log(post);
+  return (dispatch) => {
+    return callApi(`posts/${cuid}`, 'put', {
+      post: {
+        name: post.name,
+        title: post.title,
+        content: post.content,
+      },
+    }).then(() => dispatch(editPost(cuid, post)));
+  };
+}
+
+export function likePost(cuid, post) {
+  return {
+    type: LIKE_POST,
+    cuid,
+    post,
+  };
+}
+
+export function likePostRequest(cuid, post) {
+  return (dispatch) => {
+    return callApi(`posts/${cuid}`, 'put', {
+      post: {
+        ...post,
+        voteCount: post.voteCount + 1,
+      },
+    }).then(() => dispatch(likePost(cuid, post)));
+  };
+}
+
+export function dislikePost(cuid, post) {
+  return {
+    type: DISLIKE_POST,
+    cuid,
+    post,
+  };
+}
+
+export function dislikePostRequest(cuid, post) {
+  return (dispatch) => {
+    return callApi(`posts/${cuid}`, 'put', {
+      post: {
+        ...post,
+        voteCount: post.voteCount - 1,
+      },
+    }).then(() => dispatch(dislikePost(cuid, post)));
   };
 }

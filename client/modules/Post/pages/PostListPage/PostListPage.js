@@ -7,7 +7,7 @@ import PostList from '../../components/PostList';
 import PostCreateWidget from '../../components/PostCreateWidget/PostCreateWidget';
 
 // Import Actions
-import { addPostRequest, fetchPosts, deletePostRequest } from '../../PostActions';
+import { addPostRequest, fetchPosts, deletePostRequest, likePostRequest, dislikePostRequest } from '../../PostActions';
 import { toggleAddPost } from '../../../App/AppActions';
 
 // Import Selectors
@@ -29,12 +29,27 @@ class PostListPage extends Component {
     this.props.dispatch(toggleAddPost());
     this.props.dispatch(addPostRequest({ name, title, content }));
   };
+  // dodać handle like i dislike niech dispatchuje like/dislike post requesta
+  handleLikePost = (event, cuid, post) => {
+    event.preventDefault();
+    this.props.dispatch(likePostRequest(cuid, post));
+  };
+
+  handleDislikePost = (event, cuid, post) => {
+    event.preventDefault();
+    this.props.dispatch(dislikePostRequest(cuid, post));
+  };
 
   render() {
     return (
       <div>
         <PostCreateWidget addPost={this.handleAddPost} showAddPost={this.props.showAddPost} />
-        <PostList handleDeletePost={this.handleDeletePost} posts={this.props.posts} />
+        <PostList
+          handleLikePost={this.handleLikePost}
+          handleDislikePost={this.handleDislikePost}
+          handleDeletePost={this.handleDeletePost}
+          posts={this.props.posts}
+        />
       </div>
     );
   }
@@ -56,6 +71,7 @@ PostListPage.propTypes = {
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
+    voteCount: PropTypes.number.isRequired,
   })).isRequired,
   showAddPost: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Hello => (props, context) {
+const Hello = (props, context) => {
   return (
   );
 }
