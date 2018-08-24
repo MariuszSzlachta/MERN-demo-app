@@ -72,8 +72,6 @@ export function editPost(cuid, post) {
 }
 
 export function editPostRequest(cuid, post) {
-  console.log('IN EDIT');
-  console.log(post);
   return (dispatch) => {
     return callApi(`posts/${cuid}`, 'put', {
       post: {
